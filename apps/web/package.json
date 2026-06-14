@@ -1,0 +1,27 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node node_modules/next/dist/bin/next build",
+    "dev": "node node_modules/next/dist/bin/next dev",
+    "lint": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",
+    "start": "node node_modules/next/dist/bin/next start",
+    "test": "node node_modules/@playwright/test/cli.js test",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit -p tsconfig.json",
+    "format": "echo \"No formatter configured for web\""
+  },
+  "dependencies": {
+    "@xstocketf/types": "workspace:*",
+    "next": "15.0.3",
+    "react": "19.0.0-rc-69d4b800-20241021",
+    "react-dom": "19.0.0-rc-69d4b800-20241021"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.6.3"
+  }
+}

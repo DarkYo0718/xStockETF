@@ -1,0 +1,16 @@
+{
+  "name": "xstocketf",
+  "private": true,
+  "packageManager": "pnpm@9.12.3",
+  "scripts": {
+    "build": "corepack pnpm --filter api --filter web build",
+    "dev": "corepack pnpm --parallel --filter api --filter web dev",
+    "lint": "corepack pnpm --filter api --filter web lint",
+    "refresh:active-etfs": "corepack pnpm --filter api refresh:active-etfs",
+    "test": "corepack pnpm --filter api --filter web test",
+    "typecheck": "corepack pnpm --filter api --filter web typecheck",
+    "format": "corepack pnpm --filter api --filter web format",
+    "prisma:generate": "corepack pnpm --filter api prisma generate",
+    "prisma:migrate": "corepack pnpm --filter api prisma migrate dev"
+  }
+}

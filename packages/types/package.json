@@ -1,0 +1,15 @@
+{
+  "name": "@xstocketf/types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo \"No standalone build for @xstocketf/types\"",
+    "lint": "echo \"No standalone lint for @xstocketf/types\"",
+    "test": "echo \"No tests for @xstocketf/types\"",
+    "typecheck": "echo \"No standalone typecheck for @xstocketf/types\"",
+    "format": "echo \"No formatter configured for @xstocketf/types\""
+  }
+}

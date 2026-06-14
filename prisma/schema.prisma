@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AssetClass {
+  ACTIVE_STOCK
+  ACTIVE_BOND
+}
+
+enum ActionType {
+  BUY
+  SELL
+  NEW
+  EXIT
+  HOLD
+}
+
+model User {
+  id             String              @id @default(uuid())
+  email          String              @unique
+  displayName    String?
+  cmoneyUserId   String?             @unique
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  entitlements   UserEntitlement[]
+  etfWatchlist   EtfWatchlistItem[]
+  stockWatchlist StockWatchlistItem[]
+}
+
+model UserEntitlement {
+  id        String   @id @default(uuid())
+  userId    String
+  planCode  String
+  isActive  Boolean  @default(true)
+  expiresAt DateTime?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+}
+
+model Etf {
+  id               String               @id @default(uuid())
+  code             String               @unique
+  name             String
+  issuerName       String
+  assetClass       AssetClass
+  benchmark        String?
+  baseCurrency     String               @default("TWD")
+  market           String               @default("TW")
+  isActive         Boolean              @default(true)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  latestMetric     EtfMetricDaily?
+  holdingSnapshots EtfHoldingSnapshot[]
+  watchlistItems   EtfWatchlistItem[]
+}
+
+model Stock {
+  id             String               @id @default(uuid())
+  ticker         String               @unique
+  name           String
+  market         String               @default("TW")
+  currency       String               @default("TWD")
+  holdingItems   EtfHoldingItem[]
+  watchlistItems StockWatchlistItem[]
+}
+
+model EtfMetricDaily {
+  id                 String   @id @default(uuid())
+  etfId              String   @unique
+  asOfDate           DateTime
+  latestClose        Decimal? @db.Decimal(18, 4)
+  estimatedNav       Decimal? @db.Decimal(18, 4)
+  premiumDiscountPct Decimal? @db.Decimal(8, 4)
+  rawPayload         Json?
+  etf                Etf      @relation(fields: [etfId], references: [id], onDelete: Cascade)
+}
+
+model EtfHoldingSnapshot {
+  id            String           @id @default(uuid())
+  etfId         String
+  asOfDate      DateTime
+  publishedAt   DateTime?
+  sourceName    String
+  sourceHash    String?
+  sourcePayload Json?
+  etf           Etf              @relation(fields: [etfId], references: [id], onDelete: Cascade)
+  items         EtfHoldingItem[]
+
+  @@unique([etfId, asOfDate])
+  @@index([asOfDate])
+}
+
+model EtfHoldingItem {
+  id              String             @id @default(uuid())
+  snapshotId      String
+  stockId         String
+  weightPct       Decimal            @db.Decimal(10, 4)
+  shares          Decimal?           @db.Decimal(20, 4)
+  changeWeightPct Decimal?           @db.Decimal(10, 4)
+  actionType      ActionType         @default(HOLD)
+  snapshot        EtfHoldingSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  stock           Stock              @relation(fields: [stockId], references: [id], onDelete: Restrict)
+
+  @@unique([snapshotId, stockId])
+  @@index([stockId])
+}
+
+model EtfWatchlistItem {
+  id        String   @id @default(uuid())
+  userId    String
+  etfId     String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  etf       Etf      @relation(fields: [etfId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, etfId])
+}
+
+model StockWatchlistItem {
+  id        String   @id @default(uuid())
+  userId    String
+  stockId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stock     Stock    @relation(fields: [stockId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, stockId])
+}
