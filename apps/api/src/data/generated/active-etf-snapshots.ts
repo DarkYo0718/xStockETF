@@ -1,7 +1,7 @@
 import type { ActiveEtfDataset } from "../active-etf-dataset.js";
 
 export const generatedActiveEtfDataset: ActiveEtfDataset = {
-  "generatedAt": "2026-08-21T22:38:48.839Z",
+  "generatedAt": "2026-08-22T22:36:16.948Z",
   "source": [
     "tw.stock.yahoo.com/quote/*/holding"
   ],
